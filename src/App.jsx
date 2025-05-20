@@ -1,4 +1,14 @@
-import React, { useState, useEffect } from "react";
+const debounce = (callback, delay) => {
+  let timeout;
+  return (value) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      callback(value);
+    }, delay);
+  };
+};
+
+import React, { useState, useEffect, useCallback } from "react";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -19,8 +29,10 @@ function App() {
     }
   };
 
+  const debounceFetchProducts = useCallback(debounce(fetchProducts, 500), []);
+
   useEffect(() => {
-    fetchProducts(query);
+    debounceFetchProducts(query);
   }, [query]);
 
   return (
